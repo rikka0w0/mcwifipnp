@@ -1,28 +1,34 @@
 modLoader="javafml"
 loaderVersion="${neo_loader_version_range}"
 license="Apache License 2.0"
-issueTrackerURL="https://github.com/Satxm/mcwifipnp/issues"
+issueTrackerURL="https://github.com/satxm/mcwifipnp/issues"
 
 [[mods]]
 modId="mcwifipnp"
 version="${mod_version}"
 displayName="LAN World Plug-n-Play"
-updateJSONURL=""
+#updateJSONURL=""
 displayURL="https://github.com/satxm/mcwifipnp"
 logoFile="mcwifipnp.png"
 authors="Satxm"
 description="A Minecraft LAN World Tool With WLAN UPnP."
 
+#[[mixins]]
+#config="mcwifipnp.mixins.json"
+
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+
 [[dependencies.mcwifipnp]]
     modId="neoforge"
-    mandatory=true
+    type="required"
     versionRange="${neo_version_range}"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.mcwifipnp]]
     modId="minecraft"
-    mandatory=true
+    type="required"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="CLIENT"

@@ -32,7 +32,6 @@ public class MCWiFiPnP {
 
     public MCWiFiPnP() {
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.Init.Post evt) -> {
             onAfterInitScreen(evt.getScreen().getMinecraft(), evt.getScreen(), evt.getListenersList(), evt::addListener, evt::removeListener);
         });

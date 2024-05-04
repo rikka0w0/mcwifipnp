@@ -73,7 +73,8 @@ public class MCWiFiPnPUnit {
         server.setEnforceWhitelist(cfg.Whitelist);
         playerList.setUsingWhiteList(cfg.Whitelist);
         playerList.getOps().add(new ServerOpListEntry(server.getSingleplayerProfile(), 4, playerList.canBypassPlayerLimit(server.getSingleplayerProfile())));
-        playerList.setAllowCheatsForAllPlayers(cfg.AllPlayersCheats);
+        //playerList.setAllowCheatsForAllPlayers(cfg.AllPlayersCheats);
+        playerList.setAllowCommandsForAllPlayers(cfg.AllPlayersCheats);
 
         new Thread(() -> {
             MCWiFiPnPUnit.UseUPnP(cfg, client);

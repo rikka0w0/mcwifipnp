@@ -32,7 +32,8 @@ public class ShareToLanScreenNew extends Screen {
 
         if (cfg.needsDefaults) {
             cfg.port = HttpUtil.getAvailablePort();
-            cfg.AllowCommands = client.getSingleplayerServer().getWorldData().getAllowCommands();
+            //cfg.AllowCommands = client.getSingleplayerServer().getWorldData().getAllowCommands();
+            cfg.AllowCommands = client.getSingleplayerServer().getWorldData().isAllowCommands();
             cfg.GameMode = client.getSingleplayerServer().getDefaultGameType().getName();
             cfg.OnlineMode = client.getSingleplayerServer().usesAuthentication();
             cfg.needsDefaults = false;

@@ -1,8 +1,10 @@
 plugins {
-    id 'org.quiltmc.loom' version '1.4+'
+    id 'org.quiltmc.loom' version '1.6+'
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_21
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
 version = project.mod_version + "-" + project.minecraft_version + "-quilt"
 group = project.mod_group_id
@@ -25,7 +27,9 @@ dependencies {
         officialMojangMappings()
     }
     modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader_version}"
-    modImplementation "org.quiltmc:qsl:${project.qsl_version}+${project.minecraft_version}"
+    //modImplementation "org.quiltmc:qsl:${project.qsl_version}+${project.minecraft_version}"
+    modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${qfapi_version}"
+    modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated${qfapi_version}"
 }
 
 sourceSets {
@@ -56,7 +60,7 @@ tasks.withType(ProcessResources).configureEach {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    it.options.release = 17
+    it.options.release = 21
 }
 
 java.withSourcesJar()
