@@ -82,3 +82,10 @@ jar {
     from("../LICENSE") {
     }
 }
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

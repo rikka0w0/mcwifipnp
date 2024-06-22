@@ -10,7 +10,7 @@ version = project.mod_version + "-" + project.minecraft_version + "-quilt"
 group = project.mod_group_id
 
 base {
-    archivesBaseName = project.mod_id
+    archivesName = project.mod_id
 }
 
 loom {
