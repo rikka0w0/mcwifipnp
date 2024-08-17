@@ -11,12 +11,12 @@ import net.minecraft.core.UUIDUtil;
 
 @Mixin(UUIDUtil.class)
 public abstract class MixinUUIDUtil {
-    @Inject(method = "createOfflinePlayerUUID", at = @At("HEAD"), cancellable = true)
-    private static void detour_createOfflinePlayerUUID(String playerName, CallbackInfoReturnable<UUID> ci) {
-        UUID uuid = UUIDFixer.hookEntry(playerName);
-        if (uuid != null) {
-            ci.setReturnValue(uuid);
-            ci.cancel();
-        }
+  @Inject(method = "createOfflinePlayerUUID", at = @At("HEAD"), cancellable = true)
+  private static void detour_createOfflinePlayerUUID(String playerName, CallbackInfoReturnable<UUID> ci) {
+    UUID uuid = UUIDFixer.hookEntry(playerName);
+    if (uuid != null) {
+      ci.setReturnValue(uuid);
+      ci.cancel();
     }
+  }
 }
