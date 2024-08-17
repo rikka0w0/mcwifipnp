@@ -3,22 +3,21 @@ package io.github.satxm.mcwifipnp;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.HttpUtil;
 import net.minecraft.world.level.GameType;
+import java.util.Collections;
 
 public class ShareToLanScreenNew extends Screen {
     private final MCWiFiPnPUnit.Config cfg;
     private EditBox EditPort;
     private EditBox EditMotd;
     private EditBox EditPlayers;
+    private EditBox EditOfflinePlayers;
     private final Screen lastScreen;
 
     public ShareToLanScreenNew(Screen screen) {
@@ -35,6 +34,7 @@ public class ShareToLanScreenNew extends Screen {
             cfg.AllowCommands = client.getSingleplayerServer().getWorldData().isAllowCommands();
             cfg.GameMode = client.getSingleplayerServer().getDefaultGameType().getName();
             cfg.OnlineMode = client.getSingleplayerServer().usesAuthentication();
+            cfg.alwaysOfflinePlayers = Collections.emptyList();
             cfg.needsDefaults = false;
         }
     }
@@ -57,7 +57,7 @@ public class ShareToLanScreenNew extends Screen {
         this.addRenderableWidget(StartLanServer);
 
         this.addRenderableWidget(
-                Button.builder(CommonComponents.GUI_CANCEL, button -> this.minecraft.setScreen(this.lastScreen))
+                Button.builder(CommonComponents.GUI_CANCEL, button -> this.onClose())
                         .bounds(this.width / 2 + 5, this.height - 32, 150, 20).build());
 
         this.addRenderableWidget(CycleButton.builder(GameType::getShortDisplayName)
@@ -165,10 +165,14 @@ public class ShareToLanScreenNew extends Screen {
                     cfg.Whitelist = Whitelist;
                 })).setTooltip(Tooltip.create(Component.translatable("mcwifipnp.gui.Whitelist.info")));
 
-        this.addRenderableWidget(CycleButton.onOffBuilder(cfg.OnlineMode).create(this.width / 2 - 155, 148, 150, 20,
-                Component.translatable("mcwifipnp.gui.OnlineMode"), (cycleButton, OnlineMode) -> {
-                    cfg.OnlineMode = OnlineMode;
-                })).setTooltip(Tooltip.create(Component.translatable("mcwifipnp.gui.OnlineMode.info")));
+        this.addRenderableWidget(CycleButton.builder(OnlineMode::getDisplayName)
+                .withValues(OnlineMode.values())
+                .withInitialValue(OnlineMode.of(cfg.OnlineMode, cfg.EnableUUIDFix)).withTooltip((OnlineMode) -> Tooltip.create(OnlineMode.gettoolTip()))
+                .create(this.width / 2 - 155, 148, 150, 20,
+                        Component.translatable("mcwifipnp.gui.OnlineMode"), (cycleButton, OnlineMode) -> {
+                            cfg.OnlineMode = OnlineMode.getOnlieMode();
+                            cfg.EnableUUIDFix = OnlineMode.getFixUUID();
+                }));
 
         this.addRenderableWidget(CycleButton.onOffBuilder(cfg.PvP).create(this.width / 2 + 5, 148, 150, 20,
                 Component.translatable("mcwifipnp.gui.PvP"), (cycleButton, PvP) -> {
@@ -186,6 +190,10 @@ public class ShareToLanScreenNew extends Screen {
                 })).setTooltip(Tooltip.create(Component.translatable("mcwifipnp.gui.CopyIP.info")));
     }
 
+    public void onClose() {
+        this.minecraft.setScreen(this.lastScreen);
+    }
+
     public void render(GuiGraphics guiGraphics, int i, int j, float f) {
         super.render(guiGraphics, i, j, f);
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
@@ -197,8 +205,6 @@ public class ShareToLanScreenNew extends Screen {
                 16777215);
         guiGraphics.drawCenteredString(this.font, Component.translatable("lanServer.otherPlayers"), this.width / 2, 104,
                 16777215);
-        EditPort.render(guiGraphics, i, j, f);
-        EditPlayers.render(guiGraphics, i, j, f);
-        EditMotd.render(guiGraphics, i, j, f);
+
     }
 }

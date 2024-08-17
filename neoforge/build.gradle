@@ -21,10 +21,6 @@ repositories {
 }
 
 minecraft {
-    accessTransformers {
-        file('src/main/resources/META-INF/accesstransformer.cfg')
-    }
-
     runs {
         configureEach {
             workingDirectory project.file('run')
@@ -43,6 +39,7 @@ minecraft {
 
 dependencies {
     implementation "net.neoforged:neoforge:${project.neo_version}"
+    implementation "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 sourceSets {

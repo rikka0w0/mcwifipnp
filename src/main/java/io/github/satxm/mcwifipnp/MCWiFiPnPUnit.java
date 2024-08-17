@@ -12,14 +12,9 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.WeakHashMap;
+import java.util.*;
 
+import io.github.satxm.mcwifipnp.mixin.PlayerListAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +49,6 @@ public class MCWiFiPnPUnit {
     public static Config getConfig(MinecraftServer server) {
         return Objects.requireNonNull(configMap.get(server), "no config for server???");
     }
-
     
     public static void OpenToLan() {
         Minecraft client = Minecraft.getInstance();
@@ -67,13 +61,15 @@ public class MCWiFiPnPUnit {
                 ? PublishCommand.getSuccessMessage(cfg.port)
                 : Component.translatable("commands.publish.failed");
         client.gui.getChat().addMessage(component);
-        MCWiFiPnP.setMaxPlayers(server,cfg.maxPlayers);
+        ((PlayerListAccessor) playerList).setMaxPlayers(cfg.maxPlayers);
         server.setUsesAuthentication(cfg.OnlineMode);
         server.setPvpAllowed(cfg.PvP);
         server.setEnforceWhitelist(cfg.Whitelist);
         playerList.setUsingWhiteList(cfg.Whitelist);
         playerList.getOps().add(new ServerOpListEntry(server.getSingleplayerProfile(), 4, playerList.canBypassPlayerLimit(server.getSingleplayerProfile())));
         playerList.setAllowCommandsForAllPlayers(cfg.AllPlayersCheats);
+        UUIDFixer.EnableUUIDFix = cfg.EnableUUIDFix;
+        UUIDFixer.alwaysOfflinePlayers = cfg.alwaysOfflinePlayers;
 
         new Thread(() -> {
             MCWiFiPnPUnit.UseUPnP(cfg, client);
@@ -196,6 +192,8 @@ public class MCWiFiPnPUnit {
         public boolean UseUPnP = true;
         public boolean AllowCommands = false;
         public boolean OnlineMode = true;
+        public boolean EnableUUIDFix = false;
+        public List<String> alwaysOfflinePlayers = Collections.emptyList();
         public boolean PvP = true;
         public boolean CopyToClipboard = true;
         public transient Path location;
